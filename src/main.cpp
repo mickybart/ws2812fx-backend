@@ -45,7 +45,7 @@
  * - led count
  * - led pin
  */
-Core* core = nullptr;
+Core *core = nullptr;
 
 /*
  * One-time call to setup the board after a reset or power on.

@@ -25,7 +25,7 @@ void Core::fx_service()
 /*
  * Get a direct access to WS2812FX instance
  */
-WS2812FX& Core::get_fx()
+WS2812FX &Core::get_fx()
 {
     return ws2812fx;
 }

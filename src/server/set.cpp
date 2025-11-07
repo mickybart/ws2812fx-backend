@@ -15,8 +15,8 @@ void set_color(uint8_t arg_num)
  */
 void set_mode(uint8_t arg_num)
 {
-  uint8_t request = (uint8_t)strtol(server.arg(arg_num).c_str(), NULL, 10);
-  core->use_mode(request);
+  long mode = strtol(server.arg(arg_num).c_str(), NULL, 10);
+  core->use_mode(mode);
   Serial.print("mode is ");
   Serial.println(core->get_fx().getModeName(core->get_fx().getMode()));
 }

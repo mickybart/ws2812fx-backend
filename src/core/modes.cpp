@@ -73,12 +73,14 @@ void Core::modes_auto_cycle_start()
 
 /*
  * Use a specific mode, stop auto cycle and store it in settings
+ * constrain the long value between LOW_MODE_INDEX and HIGH_MODE_INDEX;
  */
-void Core::use_mode(uint8_t mode)
+void Core::use_mode(long mode)
 {
-  uint8_t boxed_mode = sizeof(myModes) > 0 ? myModes[mode % sizeof(myModes)] : mode % ws2812fx.getModeCount();
+  long mode_indexed = sizeof(myModes) > 0UL ? myModes[mode % sizeof(myModes)] : mode % ws2812fx.getModeCount();
+  uint8_t boxed_mode = constrain(mode_indexed, LOW_MODE_INDEX, HIGH_MODE_INDEX);
 
   modes_auto_cycle_stop();
-  ws2812fx.setMode(settings.mode);
+  ws2812fx.setMode(boxed_mode);
   settings.mode = boxed_mode;
 }

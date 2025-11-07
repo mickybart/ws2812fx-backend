@@ -10,11 +10,11 @@ public:
     Core(settings_t settings);
     void setup();
     void loop();
-    void use_mode(uint8_t mode);
+    void use_mode(long mode);
     void modes_auto_cycle_start();
     void modes_auto_cycle_stop();
-    String& get_modes();
-    WS2812FX& get_fx();
+    String &get_modes();
+    WS2812FX &get_fx();
 
     void set_color(long color);
     void set_brightness(long brightness);

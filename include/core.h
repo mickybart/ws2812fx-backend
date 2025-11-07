@@ -3,6 +3,6 @@
 
 #include "internal/core.h"
 
-extern Core* core;
+extern Core *core;
 
 #endif

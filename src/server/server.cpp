@@ -4,7 +4,7 @@
 extern const char index_html[];
 extern const char main_js[];
 
-constexpr int HTTP_PORT=80;
+constexpr int HTTP_PORT = 80;
 
 #ifdef ARDUINO_ARCH_ESP32
 WebServer server(HTTP_PORT);
