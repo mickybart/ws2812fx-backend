@@ -25,7 +25,61 @@ void Core::fx_service()
 /*
  * Get a direct access to WS2812FX instance
  */
-WS2812FX &Core::get_fx()
+WS2812FX& Core::get_fx()
 {
     return ws2812fx;
+}
+
+/*
+ * Set the color and store it in settings
+ */
+void Core::set_color(long color)
+{
+    uint32_t boxed_color = constrain(color, (long)LOW_COLOR, (long)HIGH_COLOR);
+    ws2812fx.setColor(boxed_color);
+    settings.color = boxed_color;
+}
+
+/*
+ * Set the brightness and store it in settings
+ * constrain the long value between LOW_BRIGHTNESS and HIGH_BRIGHTNESS
+ */
+void Core::set_brightness(long brightness)
+{
+    uint8_t boxed_brightness = constrain(brightness, LOW_BRIGHTNESS, HIGH_BRIGHTNESS);
+    ws2812fx.setBrightness(boxed_brightness);
+    settings.brightness = boxed_brightness;
+}
+
+/*
+ * Set the brightness and store it in settings
+ * constrain the double value between LOW_BRIGHTNESS and HIGH_BRIGHTNESS
+ */
+void Core::set_brightness(double brightness)
+{
+    uint8_t boxed_brightness = constrain(brightness, LOW_BRIGHTNESS, HIGH_BRIGHTNESS);
+    ws2812fx.setBrightness(boxed_brightness);
+    settings.brightness = boxed_brightness;
+}
+
+/*
+ * Set the speed and store it in settings
+ * constrain the long value between LOW_SPEED and HIGH_SPEED
+ */
+void Core::set_speed(long speed)
+{
+    uint16_t boxed_speed = constrain(speed, LOW_SPEED, HIGH_SPEED);
+    ws2812fx.setSpeed(boxed_speed);
+    settings.speed = boxed_speed;
+}
+
+/*
+ * Set the speed and store it in settings
+ * constrain the double value between LOW_SPEED and HIGH_SPEED
+ */
+void Core::set_speed(double speed)
+{
+    uint16_t boxed_speed = constrain(speed, LOW_SPEED, HIGH_SPEED);
+    ws2812fx.setSpeed(boxed_speed);
+    settings.speed = boxed_speed;
 }

@@ -6,11 +6,8 @@
  */
 void set_color(uint8_t arg_num)
 {
-  uint32_t tmp = (uint32_t)strtol(server.arg(arg_num).c_str(), NULL, 10);
-  if (tmp <= 0xFFFFFF)
-  {
-    core->get_fx().setColor(tmp);
-  }
+  long color = strtol(server.arg(arg_num).c_str(), NULL, 10);
+  core->set_color(color);
 }
 
 /*
@@ -30,19 +27,16 @@ void set_mode(uint8_t arg_num)
 void set_brightness(uint8_t arg_num)
 {
   if (server.arg(arg_num)[0] == '-')
-  {
-    core->get_fx().setBrightness(core->get_fx().getBrightness() * 0.8);
-  }
+    core->set_brightness(core->get_fx().getBrightness() * 0.8);
   else if (server.arg(arg_num)[0] == ' ')
-  {
-    int newBrightness = constrain(core->get_fx().getBrightness() * 1.2, 6, 255);
-    core->get_fx().setBrightness(newBrightness);
-  }
+    core->set_brightness(core->get_fx().getBrightness() * 1.2);
   else
-  { // set brightness directly
-    uint8_t tmp = (uint8_t)strtol(server.arg(arg_num).c_str(), NULL, 10);
-    core->get_fx().setBrightness(tmp);
+  {
+    // set brightness directly
+    long speed = strtol(server.arg(arg_num).c_str(), NULL, 10);
+    core->set_brightness(speed);
   }
+
   Serial.print("brightness is ");
   Serial.println(core->get_fx().getBrightness());
 }
@@ -53,19 +47,15 @@ void set_brightness(uint8_t arg_num)
 void set_speed(uint8_t arg_num)
 {
   if (server.arg(arg_num)[0] == '-')
-  {
-    int newSpeed = constrain(core->get_fx().getSpeed() * 1.2, 6, 65535);
-    core->get_fx().setSpeed(newSpeed);
-  }
+    core->set_speed(core->get_fx().getSpeed() * 1.2);
   else if (server.arg(arg_num)[0] == ' ')
-  {
-    core->get_fx().setSpeed(core->get_fx().getSpeed() * 0.8);
-  }
+    core->set_speed(core->get_fx().getSpeed() * 0.8);
   else
   {
-    uint16_t tmp = (uint16_t)strtol(server.arg(arg_num).c_str(), NULL, 10);
-    core->get_fx().setSpeed(tmp);
+    long speed = strtol(server.arg(arg_num).c_str(), NULL, 10);
+    core->set_speed(speed);
   }
+
   Serial.print("speed is ");
   Serial.println(core->get_fx().getSpeed());
 }
@@ -76,13 +66,9 @@ void set_speed(uint8_t arg_num)
 void set_auto_cycle(uint8_t arg_num)
 {
   if (server.arg(arg_num)[0] == '-')
-      {
-        core->modes_auto_cycle_stop();
-      }
-      else
-      {
-        core->modes_auto_cycle_start();
-      }
+    core->modes_auto_cycle_stop();
+  else
+    core->modes_auto_cycle_start();
 }
 
 /*

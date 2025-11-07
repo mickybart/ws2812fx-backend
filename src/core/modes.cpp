@@ -72,13 +72,13 @@ void Core::modes_auto_cycle_start()
 }
 
 /*
- * Use a specific mode and stop auto cycle if required.
+ * Use a specific mode, stop auto cycle and store it in settings
  */
-void Core::use_mode(uint8_t request)
+void Core::use_mode(uint8_t mode)
 {
-  uint8_t new_mode = sizeof(myModes) > 0 ? myModes[request % sizeof(myModes)] : request % ws2812fx.getModeCount();
+  uint8_t boxed_mode = sizeof(myModes) > 0 ? myModes[mode % sizeof(myModes)] : mode % ws2812fx.getModeCount();
 
   modes_auto_cycle_stop();
-  settings.mode = new_mode;
   ws2812fx.setMode(settings.mode);
+  settings.mode = boxed_mode;
 }
