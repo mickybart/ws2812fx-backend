@@ -1,13 +1,5 @@
 /*
-  WS2812FX Webinterface.
-
-  Harm Aldick - 2016
-  www.aldick.org
-
-
-  FEATURES
-    * Webinterface with mode, color, speed and brightness selectors
-
+  WS2812FX Backend
 
   LICENSE
 
@@ -36,24 +28,24 @@
 
 
   CHANGELOG
-  2016-11-26 initial version
-  2018-01-06 added custom effects list option and auto-cycle feature
+  2016-11-26 initial version (Harm Aldick)
+  2018-01-06 added custom effects list option and auto-cycle feature (Harm Aldick)
   2025-05-13 added WiFiManager (manage SSID and passphrase in flash); OTA support via ArduinoOTA
   2025-11-05 Use platformIO and migrate code from ino to cpp with a new structure for future features
+  2025-11-07 Introduce Core class to provide settings that will be exposed to users
 */
 
 #include <Arduino.h>
-#include <WS2812FX.h>
 #include "wireless.h"
-#include "globals.h"
-#include "service.h"
-#include "modes_auto_cycle.h"
+#include "server.h"
+#include "core.h"
 
-// checks WiFi every ...ms. Reset after this time, if WiFi cannot reconnect.
-constexpr ulong WIFI_TIMEOUT=30000;
-
-// cycle effect mode every 10 seconds
-constexpr ulong AUTO_CYCLE_EVERY_MS=10000;
+/*
+ * Core is dynamically allocated to support user settings during runtime like:
+ * - led count
+ * - led pin
+ */
+Core* core = nullptr;
 
 /*
  * One-time call to setup the board after a reset or power on.
@@ -64,10 +56,12 @@ void setup()
   delay(500);
   Serial.println("\n\nStarting...");
 
-  wifi_setup(WIFI_TIMEOUT); // Contient GestionWiFi pour WifiManager
-  ota_setup();              // Ajouté par Spi Pour ArduinoOTA (Mise à jour Flash)
-  fx_setup();
-  modes_setup();
+  wifi_setup(WIFI_TIMEOUT);
+  ota_setup();
+
+  core = new Core({});
+  core->setup();
+
   server_setup();
 
   Serial.println("ready!");
@@ -82,7 +76,6 @@ void loop()
   ota_handler();
 
   server_client_handler();
-  fx_service();
 
-  modes_auto_cycle(AUTO_CYCLE_EVERY_MS);
+  core->loop();
 }

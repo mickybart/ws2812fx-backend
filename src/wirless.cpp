@@ -122,7 +122,7 @@ void wifimanager_setup(String ordre)
  * WiFi support.
  * If no connection is made within timeout, ESP gets resettet.
  */
-void wifi_setup(unsigned long timeout)
+void wifi_setup(ulong timeout)
 {
   Serial.println("Wifi setup");
   Serial.print("Connecting to ");
@@ -159,7 +159,7 @@ unsigned long last_wifi_check_time = 0;
 /*
  * Check WiFi connectivity at a regular interval (timeout) and reconnect to it if required.
  */
-void wifi_reconnect_on_timeout(unsigned long timeout)
+void wifi_reconnect_on_timeout(ulong timeout)
 {
   unsigned long now = millis();
 

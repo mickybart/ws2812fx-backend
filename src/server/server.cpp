@@ -1,9 +1,5 @@
-#include "globals.h"
-#include "service.h"
-
-void srv_handle_index_html();
-void srv_handle_main_js();
-void srv_handle_not_found();
+#include "core.h"
+#include "internal/server.h"
 
 extern const char index_html[];
 extern const char main_js[];

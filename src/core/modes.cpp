@@ -1,17 +1,11 @@
-#include "globals.h"
+#include "core.h"
 
-constexpr uint MODES_STRING_RESERVE=5000;
-
-String modes = "";
-uint8_t myModes[] = {}; // *** optionally create a custom list of effect/mode numbers
-
-unsigned long auto_last_change = 0;
-bool auto_cycle = false;
+constexpr uint MODES_STRING_RESERVE = 5000;
 
 /*
  * Build <li> string for all modes.
  */
-void modes_setup()
+void Core::modes_setup()
 {
   modes = "";
   modes.reserve(MODES_STRING_RESERVE);
@@ -26,22 +20,19 @@ void modes_setup()
   }
 }
 
-/*
- * Returns a list of modes for the html web page.
- */
-void srv_handle_modes()
+String &Core::get_modes()
 {
-  server.send(200, "text/plain", modes);
+  return modes;
 }
 
 /*
- * Change the mode if auto cycle is enabled every milliseconds (every_ms).
+ * Change the mode if auto cycle is enabled and the current mode timeout
  */
-void modes_auto_cycle(unsigned long every_ms)
+void Core::modes_auto_cycle()
 {
-  unsigned long now = millis();
+  ulong now = millis();
 
-  if (auto_cycle && (now - auto_last_change > every_ms))
+  if (settings.auto_cycle.enable && (now - mode_change_timestamp > settings.auto_cycle.every_ms))
   {
     uint8_t next_mode = (ws2812fx.getMode() + 1) % ws2812fx.getModeCount();
     if (sizeof(myModes) > 0)
@@ -55,36 +46,39 @@ void modes_auto_cycle(unsigned long every_ms)
         }
       }
     }
-    ws2812fx.setMode(next_mode);
+    settings.mode = next_mode;
+    ws2812fx.setMode(settings.mode);
     Serial.print("mode is ");
     Serial.println(ws2812fx.getModeName(ws2812fx.getMode()));
-    auto_last_change = now;
+    mode_change_timestamp = now;
   }
 }
 
 /*
  * Stop auto cycle
  */
-void modes_auto_cycle_stop()
+void Core::modes_auto_cycle_stop()
 {
-  auto_cycle = false;
+  settings.auto_cycle.enable = false;
 }
 
 /*
  * Start auto cycle and reset the last change
  */
-void modes_auto_cycle_start()
+void Core::modes_auto_cycle_start()
 {
-  auto_cycle = true;
-  auto_last_change = 0;
+  mode_change_timestamp = 0;
+  settings.auto_cycle.enable = true;
 }
 
 /*
  * Use a specific mode and stop auto cycle if required.
  */
-void use_mode(uint8_t request)
+void Core::use_mode(uint8_t request)
 {
   uint8_t new_mode = sizeof(myModes) > 0 ? myModes[request % sizeof(myModes)] : request % ws2812fx.getModeCount();
+
   modes_auto_cycle_stop();
-  ws2812fx.setMode(new_mode);
+  settings.mode = new_mode;
+  ws2812fx.setMode(settings.mode);
 }
