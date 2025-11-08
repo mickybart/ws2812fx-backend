@@ -1,5 +1,6 @@
 #include "core.h"
 #include "internal/server.h"
+// #include <string>
 
 /*
  * Set the LEDs color
@@ -33,8 +34,8 @@ void set_brightness(uint8_t arg_num)
   else
   {
     // set brightness directly
-    long speed = strtol(server.arg(arg_num).c_str(), NULL, 10);
-    core->set_brightness(speed);
+    long brightness = strtol(server.arg(arg_num).c_str(), NULL, 10);
+    core->set_brightness(brightness);
   }
 
   Serial.print("brightness is ");
@@ -91,5 +92,7 @@ void srv_handle_set()
     else
       Serial.println("unsupported query '" + server.argName(i) + "' for set");
   }
-  server.send(200, "text/plain", "OK");
+
+  //String ret = String(std::to_string(core->get_fx().getBrightness()).c_str());
+  server.send(200, "text/plain", "OK" /*ret*/);
 }

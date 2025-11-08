@@ -46,7 +46,7 @@ void Core::set_color(long color)
  */
 void Core::set_brightness(long brightness)
 {
-    uint8_t boxed_brightness = constrain(brightness, LOW_BRIGHTNESS, HIGH_BRIGHTNESS);
+    uint8_t boxed_brightness = constrain(brightness + 1, LOW_BRIGHTNESS, HIGH_BRIGHTNESS);
     ws2812fx.setBrightness(boxed_brightness);
     settings.brightness = boxed_brightness;
 }
@@ -57,7 +57,8 @@ void Core::set_brightness(long brightness)
  */
 void Core::set_brightness(double brightness)
 {
-    uint8_t boxed_brightness = constrain(brightness, LOW_BRIGHTNESS, HIGH_BRIGHTNESS);
+    long boxed_brightness_rounded = constrain(brightness, LOW_BRIGHTNESS, HIGH_BRIGHTNESS) + 0.5;
+    uint8_t boxed_brightness = constrain(boxed_brightness_rounded + 1, LOW_BRIGHTNESS, HIGH_BRIGHTNESS);
     ws2812fx.setBrightness(boxed_brightness);
     settings.brightness = boxed_brightness;
 }
@@ -79,7 +80,8 @@ void Core::set_speed(long speed)
  */
 void Core::set_speed(double speed)
 {
-    uint16_t boxed_speed = constrain(speed, LOW_SPEED, HIGH_SPEED);
+    long boxed_speed_rounded = constrain(speed, LOW_SPEED, HIGH_SPEED) + 0.5;
+    uint16_t boxed_speed = constrain(boxed_speed_rounded, LOW_SPEED, HIGH_SPEED);
     ws2812fx.setSpeed(boxed_speed);
     settings.speed = boxed_speed;
 }
