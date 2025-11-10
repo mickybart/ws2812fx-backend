@@ -4,7 +4,7 @@
 // Pin and led count (not really based on ARCH; TODO: use a dynamic solution)
 #ifdef ARDUINO_ARCH_ESP32
 constexpr uint8_t LED_PIN = 23;    // Ajouté par Spi  // 0 = GPIO0, 2=GPIO2
-constexpr uint16_t LED_COUNT = 96; // 106            // Ajouté par Spi
+constexpr uint16_t LED_COUNT = 10; //96; // 106;            // Ajouté par Spi
 #else
 constexpr uint8_t LED_PIN = 12;    // Ajouté par Spi  // 0 = GPIO0, 2=GPIO2
 constexpr uint16_t LED_COUNT = 78; // Ajouté par Spi  // 0 = GPIO0, 2=GPIO2
