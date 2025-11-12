@@ -2,18 +2,23 @@
 #include "internal/server.h"
 
 /*
- * Toggle LEDs power.
+ * Power Off
  */
-void srv_handle_power()
+void srv_handle_power_off()
 {
   if (core->get_fx().isRunning())
-  {
     core->get_fx().stop();
-  }
-  else
-  {
-    core->get_fx().start();
-  }
 
-  server.send(200, "text/plain", "OK");
+  server.send(200, "text/plain", "off");
+}
+
+/*
+ * Power On
+ */
+void srv_handle_power_on()
+{
+  if (!core->get_fx().isRunning())
+    core->get_fx().start();
+
+  server.send(200, "text/plain", "on");
 }

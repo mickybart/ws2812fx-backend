@@ -22,7 +22,8 @@ void server_setup()
   server.on("/main.js", srv_handle_main_js);
   server.on("/modes", srv_handle_modes);
   server.on("/set", srv_handle_set);
-  server.on("/togglePower", srv_handle_power);
+  server.on("/power/on", srv_handle_power_on);
+  server.on("/power/off", srv_handle_power_off);
   server.on("/settings", srv_handle_settings);
   server.onNotFound(srv_handle_not_found);
   server.begin();

@@ -13,7 +13,8 @@ extern ESP8266WebServer server;
 
 void srv_handle_modes();
 void srv_handle_set();
-void srv_handle_power();
+void srv_handle_power_off();
+void srv_handle_power_on();
 void srv_handle_index_html();
 void srv_handle_main_js();
 void srv_handle_not_found();

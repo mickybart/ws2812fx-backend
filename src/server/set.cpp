@@ -1,74 +1,77 @@
 #include "core.h"
 #include "internal/server.h"
+#include <string>
 
 /*
  * Set the LEDs color
  */
-void set_color(uint8_t arg_num)
+uint32_t set_color(const String &value)
 {
-  long color = strtol(server.arg(arg_num).c_str(), NULL, 10);
+  long color = strtol(value.c_str(), NULL, 10);
   core->set_color(color);
+
+  return core->get_fx().getColor();
 }
 
 /*
  * Set the fx mode
  */
-void set_mode(uint8_t arg_num)
+uint8_t set_mode(const String &value)
 {
-  long mode = strtol(server.arg(arg_num).c_str(), NULL, 10);
+  long mode = strtol(value.c_str(), NULL, 10);
   core->use_mode(mode);
-  Serial.print("mode is ");
-  Serial.println(core->get_fx().getModeName(core->get_fx().getMode()));
+
+  return core->get_fx().getMode();
 }
 
 /*
  * Set the LEDs brightness
  */
-void set_brightness(uint8_t arg_num)
+uint8_t set_brightness(const String &value)
 {
-  if (server.arg(arg_num)[0] == '-')
+  if (value[0] == '-')
     core->set_brightness(core->get_fx().getBrightness() * 0.8);
-  else if (server.arg(arg_num)[0] == ' ')
+  else if (value[0] == ' ')
     core->set_brightness(core->get_fx().getBrightness() * 1.2);
   else
   {
     // set brightness directly
-    long brightness = strtol(server.arg(arg_num).c_str(), NULL, 10);
+    long brightness = strtol(value.c_str(), NULL, 10);
     core->set_brightness(brightness);
   }
 
-  Serial.print("brightness is ");
-  Serial.println(core->get_fx().getBrightness());
+  return core->get_fx().getBrightness();
 }
 
 /*
  * Set the fx speed
  */
-void set_speed(uint8_t arg_num)
+uint16_t set_speed(const String &value)
 {
-  if (server.arg(arg_num)[0] == '-')
+  if (value[0] == '-')
     core->set_speed(core->get_fx().getSpeed() * 1.2);
-  else if (server.arg(arg_num)[0] == ' ')
+  else if (value[0] == ' ')
     core->set_speed(core->get_fx().getSpeed() * 0.8);
   else
   {
-    long speed = strtol(server.arg(arg_num).c_str(), NULL, 10);
+    long speed = strtol(value.c_str(), NULL, 10);
     core->set_speed(speed);
   }
 
-  Serial.print("speed is ");
-  Serial.println(core->get_fx().getSpeed());
+  return core->get_fx().getSpeed();
 }
 
 /*
  * Enable/Disable the fx mode auto cycle
  */
-void set_auto_cycle(uint8_t arg_num)
+bool set_auto_cycle(const String &value)
 {
-  if (server.arg(arg_num)[0] == '-')
+  if (value[0] == '-')
     core->modes_auto_cycle_stop();
   else
     core->modes_auto_cycle_start();
+
+  return core->get_settings().auto_cycle.enable;
 }
 
 /*
@@ -76,21 +79,42 @@ void set_auto_cycle(uint8_t arg_num)
  */
 void srv_handle_set()
 {
-  for (uint8_t i = 0; i < server.args(); i++)
+  if (server.args() != 1)
   {
-    if (server.argName(i) == "c")
-      set_color(i);
-    else if (server.argName(i) == "m")
-      set_mode(i);
-    else if (server.argName(i) == "b")
-      set_brightness(i);
-    else if (server.argName(i) == "s")
-      set_speed(i);
-    else if (server.argName(i) == "a")
-      set_auto_cycle(i);
-    else
-      Serial.println("unsupported query '" + server.argName(i) + "' for set");
+    server.send(400, "text/plain", "Malformed query");
+    return;
   }
 
-  server.send(200, "text/plain", "OK");
+  const String &name = server.argName(0);
+  const String &value = server.arg(0);
+
+  if (name == "c")
+  {
+    uint32_t ret = set_color(value);
+    server.send(200, "text/plain", String(std::to_string(ret).c_str()));
+  }
+  else if (name == "m")
+  {
+    uint8_t ret = set_mode(value);
+    server.send(200, "text/plain", String(std::to_string(ret).c_str()));
+  }
+  else if (name == "b")
+  {
+    uint8_t ret = set_brightness(value);
+    server.send(200, "text/plain", String(std::to_string(ret).c_str()));
+  }
+  else if (name == "s")
+  {
+    uint16_t ret = set_speed(value);
+    server.send(200, "text/plain", String(std::to_string(ret).c_str()));
+  }
+  else if (name == "a")
+  {
+    bool ret = set_auto_cycle(value);
+    server.send(200, "text/plain", ret ? "on" : "off");
+  }
+  else
+  {
+    server.send(400, "text/plain", "Unsupported query '" + name + "'");
+  }
 }

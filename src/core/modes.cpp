@@ -58,6 +58,9 @@ void Core::modes_auto_cycle_stop()
 {
   settings.auto_cycle.enable = false;
   set_dirty_settings_flag();
+
+  // switch back to settings mode
+  ws2812fx.setMode(settings.mode);
 }
 
 /*
@@ -79,8 +82,7 @@ void Core::use_mode(long mode)
   long mode_indexed = sizeof(myModes) > 0UL ? myModes[mode % sizeof(myModes)] : mode % ws2812fx.getModeCount();
   uint8_t boxed_mode = constrain(mode_indexed, LOW_MODE_INDEX, HIGH_MODE_INDEX);
 
-  modes_auto_cycle_stop();
-
+  settings.auto_cycle.enable = false;
   ws2812fx.setMode(boxed_mode);
   settings.mode = boxed_mode;
   set_dirty_settings_flag();
