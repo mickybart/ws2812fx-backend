@@ -9,6 +9,7 @@ Core::Core(settings_t settings)
     : ws2812fx(settings.led_count, settings.led_pin, NEO_GRB + NEO_KHZ800)
 {
     this->settings = settings;
+    this->_dirty_settings = false;
 }
 
 /*
@@ -25,6 +26,9 @@ void Core::setup()
  */
 void Core::loop()
 {
+    ulong now = millis();
+
+    modes_auto_cycle(now);
     fx_service();
-    modes_auto_cycle();
+    write_settings_when_dirty(now);
 }

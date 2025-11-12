@@ -28,11 +28,9 @@ String &Core::get_modes()
 /*
  * Change the mode if auto cycle is enabled and the current mode timeout
  */
-void Core::modes_auto_cycle()
+void Core::modes_auto_cycle(ulong now)
 {
-  ulong now = millis();
-
-  if (settings.auto_cycle.enable && (now - mode_change_timestamp > settings.auto_cycle.every_ms))
+  if (settings.auto_cycle.enable && (now - _mode_changed_timestamp > settings.auto_cycle.every_ms))
   {
     uint8_t next_mode = (ws2812fx.getMode() + 1) % ws2812fx.getModeCount();
     if (sizeof(myModes) > 0)
@@ -50,7 +48,7 @@ void Core::modes_auto_cycle()
     ws2812fx.setMode(settings.mode);
     Serial.print("mode is ");
     Serial.println(ws2812fx.getModeName(ws2812fx.getMode()));
-    mode_change_timestamp = now;
+    _mode_changed_timestamp = now;
   }
 }
 
@@ -60,6 +58,7 @@ void Core::modes_auto_cycle()
 void Core::modes_auto_cycle_stop()
 {
   settings.auto_cycle.enable = false;
+  set_dirty_settings_flag();
 }
 
 /*
@@ -67,8 +66,9 @@ void Core::modes_auto_cycle_stop()
  */
 void Core::modes_auto_cycle_start()
 {
-  mode_change_timestamp = 0;
+  _mode_changed_timestamp = 0;
   settings.auto_cycle.enable = true;
+  set_dirty_settings_flag();
 }
 
 /*
@@ -81,6 +81,8 @@ void Core::use_mode(long mode)
   uint8_t boxed_mode = constrain(mode_indexed, LOW_MODE_INDEX, HIGH_MODE_INDEX);
 
   modes_auto_cycle_stop();
+
   ws2812fx.setMode(boxed_mode);
   settings.mode = boxed_mode;
+  set_dirty_settings_flag();
 }

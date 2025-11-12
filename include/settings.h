@@ -19,6 +19,8 @@ constexpr uint8_t HIGH_BRIGHTNESS = 255;
 constexpr uint8_t LOW_MODE_INDEX = 0;
 constexpr uint8_t HIGH_MODE_INDEX = 255;
 
+constexpr int32_t MIME_V1 = 0xFF561292;
+
 typedef struct auto_cycle
 {
     bool enable{false};
@@ -31,6 +33,7 @@ typedef struct auto_cycle
 // Limited to 4KiB on ESP12F
 typedef struct settings
 {
+    int32_t mime{MIME_V1};
     uint8_t led_pin{LED_PIN};
     uint16_t led_count{LED_COUNT};
     uint32_t color{0xFF5900};
@@ -38,7 +41,7 @@ typedef struct settings
     uint8_t brightness{LOW_BRIGHTNESS};
     uint8_t mode{FX_MODE_STATIC};
     auto_cycle_t auto_cycle{};
-    uint8_t reserved[20]{0};
+    uint32_t reserved[10]{0};
 } settings_t;
 
 #endif

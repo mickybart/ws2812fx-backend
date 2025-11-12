@@ -59,7 +59,14 @@ void setup()
   wifi_setup(WIFI_TIMEOUT);
   ota_setup();
 
-  core = new Core({});
+  // Storage setup is externalized from core->setup() for possible future usage
+  // like sharing eeprom with some external Core usage or multiple Core instances.
+  // This feature is not yet supported.
+  // TODO: If there is no needs, we should move out this code in core->setup().
+  Core::storage_setup();
+  settings_t settings = Core::read_settings();
+
+  core = new Core(settings);
   core->setup();
 
   server_setup();
