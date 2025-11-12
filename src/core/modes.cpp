@@ -44,8 +44,7 @@ void Core::modes_auto_cycle(ulong now)
         }
       }
     }
-    settings.mode = next_mode;
-    ws2812fx.setMode(settings.mode);
+    ws2812fx.setMode(next_mode);
     Serial.print("mode is ");
     Serial.println(ws2812fx.getModeName(ws2812fx.getMode()));
     _mode_changed_timestamp = now;

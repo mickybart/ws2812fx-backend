@@ -23,6 +23,7 @@ void server_setup()
   server.on("/modes", srv_handle_modes);
   server.on("/set", srv_handle_set);
   server.on("/togglePower", srv_handle_power);
+  server.on("/settings", srv_handle_settings);
   server.onNotFound(srv_handle_not_found);
   server.begin();
   Serial.println("HTTP server started.");

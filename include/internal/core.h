@@ -13,6 +13,7 @@ public:
     void loop();
 
     WS2812FX &get_fx();
+    settings_t &get_settings();
 
     /*
      * Modes

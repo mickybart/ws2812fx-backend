@@ -17,5 +17,6 @@ void srv_handle_power();
 void srv_handle_index_html();
 void srv_handle_main_js();
 void srv_handle_not_found();
+void srv_handle_settings();
 
 #endif

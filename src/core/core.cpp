@@ -32,3 +32,11 @@ void Core::loop()
     fx_service();
     write_settings_when_dirty(now);
 }
+
+/*
+ * Get a settings reference
+ */
+settings_t &Core::get_settings()
+{
+    return settings;
+}
