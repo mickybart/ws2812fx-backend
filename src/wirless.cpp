@@ -14,8 +14,18 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-// #define STATIC_IP                       // uncomment for static IP, set IP below
-#ifdef STATIC_IP
+// Use WiFi Manager to configure the WiFi (including storing SSID and PASSWORD)
+#define USE_WIFI_MANAGER
+
+// Use a static IP instead of using DHCP
+// #define USE_STATIC_IP
+
+#ifndef USE_WIFI_MANAGER
+#define WIFI_SSID "XXXXXXXX"
+#define WIFI_PASSWORD "************"
+#endif
+
+#ifdef USE_STATIC_IP
 IPAddress ip(192, 168, 0, 123);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
@@ -125,9 +135,17 @@ void wifimanager_setup(String ordre)
 void wifi_setup(ulong timeout)
 {
   Serial.println("Wifi setup");
+
+#ifdef USE_WIFI_MANAGER
+  wifimanager_setup("Run");
+#else
   Serial.print("Connecting to ");
-  wifimanager_setup("Run"); // Ajouté par Spi Pour Gestion WiFi par WiFiManager
-#ifdef STATIC_IP
+  Serial.println(WIFI_SSID);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  WiFi.mode(WIFI_STA);
+#endif
+
+#ifdef USE_STATIC_IP
   WiFi.config(ip, gateway, subnet);
 #endif
 
