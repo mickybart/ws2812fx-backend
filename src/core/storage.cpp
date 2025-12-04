@@ -2,7 +2,7 @@
 #include "settings.h"
 #include "EEPROM.h"
 
-constexpr ulong WRITE_SETTINGS_EVERY_MS = 120000;
+constexpr ulong WRITE_SETTINGS_EVERY_MS = 5 * 60 * 1000;
 
 /*
  * Prepare the storage to support read/write operation of settings.
@@ -54,9 +54,6 @@ void Core::write_settings_when_dirty(ulong now)
  */
 void Core::set_dirty_settings_flag()
 {
-    if (_dirty_settings)
-        return;
-
     _dirty_settings_timestamp = millis();
     _dirty_settings = true;
 }

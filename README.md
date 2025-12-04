@@ -22,7 +22,7 @@ export IP=<YOUR ESP IP>
 
 `Settings` are used to store multiple parameters selected by the user.
 
-When a user will update a setting, `Settings` will be stored on EEPROM after a 2 min timeout. This timeout is set to preserve write cycles on the controller flash memory as a user can change multiple settings in a short delay.
+When a user will update a setting, `Settings` will be stored on EEPROM after a 5 min timeout with no change. This timeout is set to preserve write cycles on the controller flash memory as a user can change multiple settings in a short delay.
 
 ```bash
 # Read settings
